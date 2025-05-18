@@ -1,6 +1,5 @@
 # Gift Finder
-**Gift Finder** is a comprehensive OpenCart extension designed to **filter** and discover gift suggestions  
-based on various **criteria** for **OpenCart** stores.
+**Gift Finder** is a comprehensive OpenCart extension designed to **filter** and discover gift suggestions based on various **criteria** for **OpenCart** stores.
 The module provides an intuitive filter-based interface for customers to find the perfect gift ideas quickly and efficiently.
 ---
 ## Features
