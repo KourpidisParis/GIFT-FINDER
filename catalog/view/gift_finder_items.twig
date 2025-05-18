@@ -1,0 +1,16 @@
+{% for gift in gifts %}
+  <div class="product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div class="product-thumb">
+      <div class="image">
+        <a href="{{ gift.url }}" target="_blank">
+          <img src="{{ gift.image }}" alt="{{ gift.name }}" title="{{ gift.name }}" class="img-responsive" />
+        </a>
+      </div>
+      <div class="caption">
+        <h4><a href="{{ gift.url }}" target="_blank">{{ gift.name }}</a></h4>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="col-sm-12 text-center no-results">{{ text_no_results }}</div>
+{% endfor %}

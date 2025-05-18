@@ -1,0 +1,160 @@
+/* Gift Finder Styles */
+.gift-filter-container {
+  margin-bottom: 30px;
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-right: 20px;
+}
+
+.filter-option {
+  padding: 10px 20px;
+  background-color: rgba(100, 141, 203, 1);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-option:hover {
+  background-color: rgba(80, 121, 183, 1);
+}
+
+.filter-option.active {
+  background-color: rgba(223, 56, 33, 1);
+}
+
+.reset-filter {
+  padding: 10px 20px;
+  background-color: #e6e6e6;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-filter:hover {
+  background-color: #d4d4d4;
+}
+
+.gift-products {
+  margin-top: 20px;
+}
+
+.gift-products .product-thumb {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.gift-products .product-thumb:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.gift-products .image {
+  padding: 15px;
+  text-align: center;
+}
+
+.gift-products .caption {
+  padding: 15px;
+}
+
+.gift-products h4 {
+  font-size: 16px;
+  margin-top: 0;
+}
+
+.gift-products h4 a {
+  color: #333;
+}
+
+.gift-products h4 a:hover {
+  color: rgba(223, 56, 33, 1);
+  text-decoration: none;
+}
+
+.no-results {
+  padding: 30px;
+  font-size: 16px;
+  color: #888;
+}
+
+/* Pagination styling */
+.pagination {
+  margin: 0;
+}
+
+.pagination > li > a, 
+.pagination > li > span {
+  color: #333;
+  border-color: #ddd;
+}
+
+.pagination > .active > a, 
+.pagination > .active > span, 
+.pagination > .active > a:hover, 
+.pagination > .active > span:hover, 
+.pagination > .active > a:focus, 
+.pagination > .active > span:focus {
+  background-color: rgba(100, 141, 203, 1);
+  border-color: rgba(100, 141, 203, 1);
+}
+
+.pagination > li > a:hover, 
+.pagination > li > span:hover, 
+.pagination > li > a:focus, 
+.pagination > li > span:focus {
+  color: rgba(223, 56, 33, 1);
+  background-color: #eee;
+  border-color: #ddd;
+}
+
+/* Results count styling */
+#results-count {
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .filter-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-options {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .reset-filter {
+    width: 100%;
+  }
+  
+  #results-count {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  #pagination-container {
+    text-align: center;
+  }
+}

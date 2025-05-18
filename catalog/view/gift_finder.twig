@@ -1,0 +1,71 @@
+{{ header }}
+<ul class="breadcrumb">
+  {% for breadcrumb in breadcrumbs %}
+  <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+  {% endfor %}
+</ul>
+<div id="gift-finder" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">
+      {{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      
+      <div class="gift-filter-container">
+        {% for filter_group in filter_groups %}
+          <div class="filter-group">
+            <div class="filter-options">
+              {% for filter in filter_group.filter %}
+                <button type="button" class="filter-option{% if current_filter_id == filter.filter_id %} active{% endif %}" data-filter-id="{{ filter.filter_id }}">{{ filter.name }}</button>
+              {% endfor %}
+            </div>
+            <button type="button" class="reset-filter">{{ text_reset }}</button>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div class="gift-products">
+        <div class="row" id="gift-items">
+          {% for gift in gifts %}
+            <div class="product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12">
+              <div class="product-thumb">
+                <div class="image">
+                  <a href="{{ gift.url }}" target="_blank">
+                    <img src="{{ gift.image }}" alt="{{ gift.name }}" title="{{ gift.name }}" class="img-responsive" />
+                  </a>
+                </div>
+                <div class="caption">
+                  <h4><a href="{{ gift.url }}" target="_blank">{{ gift.name }}</a></h4>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="col-sm-12 text-center no-results">{{ text_no_results }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="row">
+          <div class="col-sm-6 text-left" id="results-count">{{ results }}</div>
+            <div class="col-sm-6 text-right" id="pagination-container">
+            {% if pagination and page > 1 %}
+                <a href="{{ first_page_url }}" class="pagination-link">{{ text_first }}</a>
+                {{ pagination }}
+            {% else %}
+                {{ pagination }}
+            {% endif %}
+            </div>
+        </div>
+      </div>
+      
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}
