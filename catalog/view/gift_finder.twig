@@ -16,13 +16,20 @@
     <div id="content" class="{{ class }}">
       {{ content_top }}
       <h1>{{ heading_title }}</h1>
-      
+
       <div class="gift-filter-container">
         {% for filter_group in filter_groups %}
           <div class="filter-group">
             <div class="filter-options">
               {% for filter in filter_group.filter %}
-                <button type="button" class="filter-option{% if current_filter_id == filter.filter_id %} active{% endif %}" data-filter-id="{{ filter.filter_id }}">{{ filter.name }}</button>
+                <button type="button" class="filter-option{% if filter.filter_id in current_filter_ids %} active{% endif %}" data-filter-id="{{ filter.filter_id }}">
+                  <span class="checkbox-square">
+                    {% if filter.filter_id in current_filter_ids %}
+                      <i class="fa fa-check"></i>
+                    {% endif %}
+                  </span>
+                  {{ filter.name }}
+                </button>
               {% endfor %}
             </div>
             <button type="button" class="reset-filter">{{ text_reset }}</button>

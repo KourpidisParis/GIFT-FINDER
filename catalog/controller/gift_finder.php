@@ -32,17 +32,24 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 			$page = 1;
 		}
 		
-		if (isset($this->request->get['filter_id'])) {
-			$filter_id = (int)$this->request->get['filter_id'];
-		} else {
-			$filter_id = 0;
+		// Handle comma-separated filter IDs
+		$filter_ids = array();
+		if (isset($this->request->get['filter_id']) && !empty($this->request->get['filter_id'])) {
+			$filter_string = $this->request->get['filter_id'];
+			if (strpos($filter_string, ',') !== false) {
+				$filter_ids = array_map('intval', explode(',', $filter_string));
+			} else {
+				$filter_ids = array((int)$filter_string);
+			}
+			// Remove any zero values
+			$filter_ids = array_filter($filter_ids);
 		}
 		
 		$limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
 		
 		// Filter data for the query
 		$filter_data = array(
-			'filter_filter_id' => $filter_id,
+			'filter_filter_ids' => $filter_ids, // Changed to array
 			'sort'  => 'g.sort_order',
 			'order' => 'ASC',
 			'start' => ($page - 1) * $limit,
@@ -76,8 +83,8 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 		
 		$url = '';
 		
-		if ($filter_id) {
-			$url .= '&filter_id=' . $filter_id;
+		if (!empty($filter_ids)) {
+			$url .= '&filter_id=' . implode(',', $filter_ids);
 		}
 		
         // Pagination
@@ -90,7 +97,7 @@ class ControllerExtensionModuleGiftFinder extends Controller {
         $pagination->url = $this->url->link('extension/module/gift_finder', $url . '&page={page}', true);
 
         // For the first page, create a special URL to ensure it has the route
-        $data['first_page_url'] = $this->url->link('extension/module/gift_finder', $filter_id ? '&filter_id=' . $filter_id : '', true);
+        $data['first_page_url'] = $this->url->link('extension/module/gift_finder', !empty($filter_ids) ? '&filter_id=' . implode(',', $filter_ids) : '', true);
 
         $data['pagination'] = $pagination->render();
 		
@@ -111,8 +118,8 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 			$this->document->addLink($this->url->link('extension/module/gift_finder', $url . '&page='. ($page + 1), true), 'next');
 		}
 		
-		// Remember current filter_id for AJAX calls
-		$data['current_filter_id'] = $filter_id;
+		// Remember current filter_ids for AJAX calls
+		$data['current_filter_ids'] = $filter_ids;
 
 		//Get SEO ulr if exists
 		$data['pageUrl'] = "index.php?route=extension/module/gift_finder";
@@ -141,8 +148,13 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 		
 		$data = array();
 		
-		if (isset($this->request->post['filter_id'])) {
-			$filter_id = (int)$this->request->post['filter_id'];
+		if (isset($this->request->post['filter_ids'])) {
+			// Handle array of filter IDs
+			$filter_ids = $this->request->post['filter_ids'];
+			if (is_string($filter_ids)) {
+				$filter_ids = array_map('intval', explode(',', $filter_ids));
+			}
+			$filter_ids = array_filter($filter_ids); // Remove zeros
 			
 			if (isset($this->request->post['page'])) {
 				$page = (int)$this->request->post['page'];
@@ -153,7 +165,7 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 			$limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
 			
 			$filter_data = array(
-				'filter_filter_id'  => $filter_id,
+				'filter_filter_ids'  => $filter_ids, // Changed to array
 				'sort'  => 'g.sort_order',
 				'order' => 'ASC',
 				'start' => ($page - 1) * $limit,
@@ -188,8 +200,11 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 			$pagination->limit = $limit;
 			
 			$url = '';
+			if (!empty($filter_ids)) {
+				$url = '&filter_id=' . implode(',', $filter_ids);
+			}
 			
-			$pagination->url = $this->url->link('extension/module/gift_finder', $url . '&filter_id=' . $filter_id . '&page={page}', true);
+			$pagination->url = $this->url->link('extension/module/gift_finder', $url . '&page={page}', true);
 			
 			$data['pagination'] = $pagination->render();
 			$data['results'] = sprintf($this->language->get('text_pagination'), ($gift_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($gift_total - $limit)) ? $gift_total : ((($page - 1) * $limit) + $limit), $gift_total, ceil($gift_total / $limit));
@@ -198,7 +213,7 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 			// Add pagination info to determine if pagination should be shown
 			$data['total_pages'] = ceil($gift_total / $limit);
 			$data['current_page'] = $page;
-			$data['filter_id'] = $filter_id;
+			$data['filter_ids'] = $filter_ids; // Changed to array
 			
 			// Create separate HTML for content and pagination
 			$product_html = $this->load->view('extension/module/gift_finder_items', $data);
@@ -210,7 +225,7 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 				'total' => $gift_total,
 				'page' => $page,
 				'limit' => $limit,
-				'filter_id' => $filter_id,
+				'filter_ids' => $filter_ids, // Changed to array
 				'product_html' => $product_html,
 				'pagination_html' => $pagination_html,
 				'results_text' => $data['results']
@@ -221,7 +236,7 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 		} else {
 			$json = array(
 				'success' => false,
-				'error' => 'No filter ID provided'
+				'error' => 'No filter IDs provided'
 			);
 			
 			$this->response->addHeader('Content-Type: application/json');

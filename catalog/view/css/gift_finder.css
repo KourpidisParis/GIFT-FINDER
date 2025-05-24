@@ -1,9 +1,9 @@
-/* Gift Finder Styles */
 .gift-filter-container {
   margin-bottom: 30px;
   background-color: #f8f8f8;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 30px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
 .filter-group {
@@ -18,6 +18,91 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-right: 20px;
+  border-radius: 30px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(100, 141, 203, 1);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Checkbox square */
+.checkbox-square {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 3px;
+  margin-right: 10px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* Check icon styling */
+.checkbox-square i {
+  position: absolute;
+  font-size: 12px;
+  color: rgba(223, 56, 33, 1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.filter-option:hover {
+  background-color: rgba(80, 121, 183, 1);
+}
+
+.filter-option.active {
+  background-color: rgba(223, 56, 33, 1);
+}
+
+.reset-filter {
+  padding: 10px 20px;
+  background-color: #e6e6e6;
+  color: #333;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-filter:hover {
+  background-color: #d4d4d4;
+}
+
+
+#gift-finder h1{
+    text-align:center;
+    font-size: 32px;
+}
+
+.gift-filter-container {
+  margin-bottom: 30px;
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 30px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-right: 20px;
+  border-radius:30px;
 }
 
 .filter-option {
@@ -25,7 +110,7 @@
   background-color: rgba(100, 141, 203, 1);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -43,7 +128,7 @@
   background-color: #e6e6e6;
   color: #333;
   border: none;
-  border-radius: 4px;
+  border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -57,9 +142,8 @@
 }
 
 .gift-products .product-thumb {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  background: rgba(248, 248, 248, 1);
+  border-radius: 16px;
   transition: all 0.3s ease;
 }
 
@@ -68,12 +152,16 @@
 }
 
 .gift-products .image {
-  padding: 15px;
+  padding: 8px;
   text-align: center;
 }
 
+.product-thumb img{
+  border-radius: 8px;
+}
+
 .gift-products .caption {
-  padding: 15px;
+  padding: 0 15px;
 }
 
 .gift-products h4 {
@@ -133,6 +221,15 @@
   font-size: 14px;
 }
 
+
+@media (min-width: 1200px) {
+  #gift-items .product-layout {
+      padding: 10px;
+      display: flex;
+      position: relative;
+  }
+}
+
 @media (max-width: 767px) {
   .filter-group {
     flex-direction: column;
@@ -156,5 +253,9 @@
   
   #pagination-container {
     text-align: center;
+  }
+
+  .product-layout{
+      margin-bottom:6px;
   }
 }

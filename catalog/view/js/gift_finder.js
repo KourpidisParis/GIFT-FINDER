@@ -1,17 +1,37 @@
 $(document).ready(function() {
+  // Initialize selected filters array from current state
+  var selectedFilters = [{{ current_filter_ids|join(',') }}];
+  
   // Filter option click
   $('.filter-option').on('click', function() {
     var filterId = $(this).data('filter-id');
     
-    // Add active class to clicked filter and remove from others
-    $('.filter-option').removeClass('active');
-    $(this).addClass('active');
+    if ($(this).hasClass('active')) {
+      // Remove filter if already active
+      $(this).removeClass('active');
+      $(this).find('.checkbox-square').html('');
+      
+      // Remove from selectedFilters array
+      var index = selectedFilters.indexOf(filterId);
+      if (index > -1) {
+        selectedFilters.splice(index, 1);
+      }
+    } else {
+      // Add filter if not active
+      $(this).addClass('active');
+      $(this).find('.checkbox-square').html('<i class="fa fa-check"></i>');
+      
+      // Add to selectedFilters array if not already there
+      if (selectedFilters.indexOf(filterId) === -1) {
+        selectedFilters.push(filterId);
+      }
+    }
     
     // Show loading indicator
     $('#gift-items').html('<div class="col-sm-12 text-center"><i class="fa fa-spinner fa-spin fa-3x"></i></div>');
     
     // Send AJAX request for page 1 of the filtered results
-    loadFilteredGifts(filterId, 1);
+    loadFilteredGifts(selectedFilters, 1);
   });
   
   // Reset filter click
@@ -19,17 +39,19 @@ $(document).ready(function() {
     // Remove active class from all filters
     $('.filter-option').removeClass('active');
     
+    // Remove all checkmarks when reset is clicked
+    $('.checkbox-square').html('');
+    
+    // Clear selected filters array
+    selectedFilters = [];
+    
     // Reload the page to show all gifts
-    //location.href = 'index.php?route=extension/module/gift_finder';
-    location.href   = '{{ pageUrl }}';
+    location.href = '{{ pageUrl }}';
   });
   
   // Function to handle AJAX pagination clicks
   $(document).on('click', '#pagination-container a', function(e) {
     e.preventDefault();
-    
-    // Get the active filter if any
-    var filterId = $('.filter-option.active').data('filter-id') || 0;
     
     // Extract page number from the link
     var pageMatch = $(this).attr('href').match(/page=(\d+)/);
@@ -45,7 +67,7 @@ $(document).ready(function() {
     }
     
     // Load the new page
-    loadFilteredGifts(filterId, page);
+    loadFilteredGifts(selectedFilters, page);
     
     // Scroll to top of product area
     $('html, body').animate({
@@ -55,12 +77,12 @@ $(document).ready(function() {
   
 
   // Function to load filtered gifts with pagination
-  function loadFilteredGifts(filterId, page) {
+  function loadFilteredGifts(filterIds, page) {
     $.ajax({
       url: 'index.php?route=extension/module/gift_finder/filter',
       type: 'post',
       data: {
-        filter_id: filterId,
+        filter_ids: filterIds.length > 0 ? filterIds.join(',') : '',
         page: page
       },
       dataType: 'json',
@@ -73,16 +95,21 @@ $(document).ready(function() {
           $('#pagination-container').html(json.pagination_html);
           $('#results-count').html(json.results_text);
           
-          // Update URL with the filter and page, preserving the route
+          // Update URL with multiple filters and page, preserving the route
           if (window.history && window.history.pushState) {
             var newUrl = '{{ pageUrl }}';
+            var params = [];
             
-            if (json.filter_id > 0) {
-              newUrl += '&filter_id=' + json.filter_id;
+            if (json.filter_ids && json.filter_ids.length > 0) {
+              params.push('filter_id=' + json.filter_ids.join(','));
             }
             
             if (json.page > 1) {
-              newUrl += '&page=' + json.page;
+              params.push('page=' + json.page);
+            }
+            
+            if (params.length > 0) {
+              newUrl += (newUrl.indexOf('?') === -1 ? '?' : '&') + params.join('&');
             }
             
             window.history.pushState({ path: newUrl }, '', newUrl);
@@ -97,4 +124,5 @@ $(document).ready(function() {
       }
     });
   }
+
 });
