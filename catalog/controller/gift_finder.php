@@ -120,6 +120,9 @@ class ControllerExtensionModuleGiftFinder extends Controller {
 		
 		// Remember current filter_ids for AJAX calls
 		$data['current_filter_ids'] = $filter_ids;
+		
+		// Create filter groups mapping for JavaScript
+		$data['filter_groups_json'] = json_encode($filter_data);
 
 		//Get SEO ulr if exists
 		$data['pageUrl'] = "index.php?route=extension/module/gift_finder";

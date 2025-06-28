@@ -18,23 +18,46 @@
       <h1>{{ heading_title }}</h1>
 
       <div class="gift-filter-container">
-        {% for filter_group in filter_groups %}
-          <div class="filter-group">
-            <div class="filter-options">
-              {% for filter in filter_group.filter %}
-                <button type="button" class="filter-option{% if filter.filter_id in current_filter_ids %} active{% endif %}" data-filter-id="{{ filter.filter_id }}">
-                  <span class="checkbox-square">
-                    {% if filter.filter_id in current_filter_ids %}
-                      <i class="fa fa-check"></i>
-                    {% endif %}
-                  </span>
-                  {{ filter.name }}
-                </button>
-              {% endfor %}
+        <div class="filter-groups-wrapper">
+          {% for filter_group in filter_groups %}
+            <div class="filter-group-dropdown">
+              <label class="filter-group-label">{{ filter_group.name }}</label>
+              <div class="dropdown-wrapper">
+                <select class="filter-dropdown" data-filter-group-id="{{ filter_group.filter_group_id }}" multiple>
+                  {% for filter in filter_group.filter %}
+                    <option value="{{ filter.filter_id }}"{% if filter.filter_id in current_filter_ids %} selected{% endif %}>
+                      {{ filter.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <div class="custom-multiselect" data-filter-group-id="{{ filter_group.filter_group_id }}">
+                  <div class="multiselect-display">
+                    <span class="placeholder">Επιλογή {{ filter_group.name }}</span>
+                    <span class="arrow">▼</span>
+                  </div>
+                  <div class="multiselect-options">
+                    {% for filter in filter_group.filter %}
+                      <label class="option-item">
+                        <input type="checkbox" value="{{ filter.filter_id }}"{% if filter.filter_id in current_filter_ids %} checked{% endif %}>
+                        <span class="checkmark"></span>
+                        <span class="option-text">{{ filter.name }}</span>
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
             </div>
-            <button type="button" class="reset-filter">{{ text_reset }}</button>
+          {% endfor %}
+        </div>
+        <div class="filter-actions">
+          <button type="button" class="reset-all-filters">{{ text_reset }}</button>
+          <div class="selected-filters">
+            <span class="selected-filters-label">Επιλέχτηκαν:</span>
+            <div class="selected-filters-tags" id="selected-filters-tags">
+              <!-- Selected filter tags will be dynamically added here -->
+            </div>
           </div>
-        {% endfor %}
+        </div>
       </div>
       
       <div class="gift-products">
@@ -57,7 +80,7 @@
           {% endfor %}
         </div>
         
-        <div class="row">
+        <div class="row pagination-row">
           <div class="col-sm-6 text-left" id="results-count">{{ results }}</div>
             <div class="col-sm-6 text-right" id="pagination-container">
             {% if pagination and page > 1 %}
@@ -74,5 +97,5 @@
     </div>
     {{ column_right }}
   </div>
-</div>
+</div> 
 {{ footer }}
